@@ -1,5 +1,5 @@
-#ifndef HiddenHMM_comp_hh
-#define HiddenHMM_comp_hh
+#ifndef AdaptiveHHMM_hh
+#define AdaptiveHHMM_hh
 
 #include <iostream>
 #include <vector>
@@ -20,10 +20,10 @@ using vector_int = vector<int>;
 using matrix_int = vector<vector_int>;
 using tensor_int = vector<matrix_int>;
 
-class HiddenHMM_comp {
+class AdaptiveHHMM {
     public:
         // Constructors
-        HiddenHMM_comp(int s, int h);
+        AdaptiveHHMM(int s, int h);
 
         // Functions to get HMM parameters
         int get_nstates();

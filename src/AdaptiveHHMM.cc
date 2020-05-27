@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <string>
 #include <stdlib.h>
-#include "HiddenHMM_comp.hh"
+#include "AdaptiveHHMM.hh"
 
 using namespace std;
 using vector_d = vector<double>;
@@ -18,7 +18,7 @@ using vector_int = vector<int>;
 using matrix_int = vector<vector_int>;
 using tensor_int = vector<matrix_int>;
 
-HiddenHMM_comp::HiddenHMM_comp(int s, int h){
+AdaptiveHHMM::AdaptiveHHMM(int s, int h){
     set_nstates(s);
     set_nhidden(h);
 
@@ -33,100 +33,100 @@ HiddenHMM_comp::HiddenHMM_comp(int s, int h){
     set_trans_mat(init_mats);
 }
 
-int HiddenHMM_comp::get_nstates(){
+int AdaptiveHHMM::get_nstates(){
     return nstates;
 }
 
-int HiddenHMM_comp::get_nhidden(){
+int AdaptiveHHMM::get_nhidden(){
     return nhidden;
 }
 
-matrix_d HiddenHMM_comp::get_params(){
+matrix_d AdaptiveHHMM::get_params(){
     return parameters;
 }
 
-matrix_d HiddenHMM_comp::get_trans_mat(int h){
+matrix_d AdaptiveHHMM::get_trans_mat(int h){
     assert(h < get_nhidden());
     return trans_matrix[h];
 }
 
-tensor_d HiddenHMM_comp::get_trans_mat(){
+tensor_d AdaptiveHHMM::get_trans_mat(){
     return trans_matrix;
 }
 
-matrix_d HiddenHMM_comp::get_hidden_mat(int i){
+matrix_d AdaptiveHHMM::get_hidden_mat(int i){
     assert(i < get_nstates());
     return hidden_matrix[i];
 }
 
-tensor_d HiddenHMM_comp::get_hidden_mat(){
+tensor_d AdaptiveHHMM::get_hidden_mat(){
     return hidden_matrix;
 }
 
-vector_d HiddenHMM_comp::get_initial_dist(int h){
+vector_d AdaptiveHHMM::get_initial_dist(int h){
     assert(h < get_nhidden());
     return initial_dist[h];
 }
 
-matrix_d HiddenHMM_comp::get_initial_dist(){
+matrix_d AdaptiveHHMM::get_initial_dist(){
     return initial_dist;
 }
 
-int HiddenHMM_comp::get_decode_iter_print(){
+int AdaptiveHHMM::get_decode_iter_print(){
     return decode_iter_print;
 }
 
-bool HiddenHMM_comp::get_print_decode(){
+bool AdaptiveHHMM::get_print_decode(){
     return print_decode;
 }
 
-bool HiddenHMM_comp::get_pdf_constant(){
+bool AdaptiveHHMM::get_pdf_constant(){
     return pdf_constant;
 }
 
-bool HiddenHMM_comp::get_log_em(){
+bool AdaptiveHHMM::get_log_em(){
     return log_em;
 }
 
-bool HiddenHMM_comp::get_state_training(){
+bool AdaptiveHHMM::get_state_training(){
     return state_training;
 }
 
-void HiddenHMM_comp::set_nstates(int s){
+void AdaptiveHHMM::set_nstates(int s){
     nstates = s;
 }
 
-void HiddenHMM_comp::set_nhidden(int h){
+void AdaptiveHHMM::set_nhidden(int h){
     nhidden = h;
 }
 
-void HiddenHMM_comp::set_params(const matrix_d& mat){
+void AdaptiveHHMM::set_params(const matrix_d& mat){
     parameters = mat;
 }
 
 
-void HiddenHMM_comp::set_trans_mat(const tensor_d& mats){
+void AdaptiveHHMM::set_trans_mat(const tensor_d& mats){
     assert(mats.size() == get_nhidden());
     assert(mats[0].size() == get_nstates());
     assert(mats[0][0].size() == get_nstates());
     trans_matrix = mats;
 }
 
-void HiddenHMM_comp::set_trans_mat(const matrix_d& mat, int h){
+void AdaptiveHHMM::set_trans_mat(const matrix_d& mat, int h){
     assert(h < get_nhidden());
     trans_matrix[h] = mat;
 }
 
-void HiddenHMM_comp::set_hidden_mat(const tensor_d& mat){
+void AdaptiveHHMM::set_hidden_mat(const tensor_d& mat){
     hidden_matrix = mat;
 }
 
-void HiddenHMM_comp::set_hidden_mat(const matrix_d& mat, int i){
+void AdaptiveHHMM::set_hidden_mat(const matrix_d& mat, int i){
     assert(i < get_nstates());
     hidden_matrix[i] = mat;
 }
 
-void HiddenHMM_comp::set_initial_matrix(int h, int add){
+void AdaptiveHHMM::set_initial_matrix(int h, int add){
     assert(h < get_nhidden());
     assert(add >= -1);
     int N = get_nstates();
@@ -138,7 +138,7 @@ void HiddenHMM_comp::set_initial_matrix(int h, int add){
     set_trans_mat(mat/(1.0*N + add), h);
 }
 
-void HiddenHMM_comp::set_initial_random_matrix(int h){
+void AdaptiveHHMM::set_initial_random_matrix(int h){
     int N = get_nstates(),
         H = get_nhidden();
 
@@ -153,7 +153,7 @@ void HiddenHMM_comp::set_initial_random_matrix(int h){
     set_trans_mat(mat, h);
 }
 
-void HiddenHMM_comp::set_initial_hidden(){
+void AdaptiveHHMM::set_initial_hidden(){
     int H = get_nhidden(),
         N = get_nstates();
     tensor_d mat(N, matrix_d(H, vector_d(H,1.0/(H+1))));
@@ -167,18 +167,18 @@ void HiddenHMM_comp::set_initial_hidden(){
     set_hidden_mat(mat);
 }
 
-void HiddenHMM_comp::set_initial_dist(const vector_d& v, int h){
+void AdaptiveHHMM::set_initial_dist(const vector_d& v, int h){
     assert(h < get_nhidden());
     initial_dist[h] = v;
 }
 
-void HiddenHMM_comp::set_initial_dist(const matrix_d& m){
+void AdaptiveHHMM::set_initial_dist(const matrix_d& m){
     assert(m.size() == get_nhidden());
     assert(m[0].size() == get_nstates());
     initial_dist = m;
 }
 
-void HiddenHMM_comp::set_initial_dist(const vector_d& hidden_dist, const vector_d& state_dist){
+void AdaptiveHHMM::set_initial_dist(const vector_d& hidden_dist, const vector_d& state_dist){
     int H = get_nhidden(),
         N = get_nstates();
     assert(hidden_dist.size() == H);
@@ -192,33 +192,33 @@ void HiddenHMM_comp::set_initial_dist(const vector_d& hidden_dist, const vector_
     set_initial_dist(initial_dist);
 }
 
-void HiddenHMM_comp::set_decode_iter_print(int iter){
+void AdaptiveHHMM::set_decode_iter_print(int iter){
     decode_iter_print = iter;
     print_decode = true;
 }
 
-void HiddenHMM_comp::set_print_decode(bool p){
+void AdaptiveHHMM::set_print_decode(bool p){
     print_decode = p;
 }
 
 
-void HiddenHMM_comp::switch_log_em(){
+void AdaptiveHHMM::switch_log_em(){
     log_em = not log_em;
 }
 
-void HiddenHMM_comp::switch_init(){
+void AdaptiveHHMM::switch_init(){
     init_params = not init_params;
 }
 
-void HiddenHMM_comp::switch_pdf_constant(){
+void AdaptiveHHMM::switch_pdf_constant(){
     pdf_constant = not pdf_constant;
 }
 
-void HiddenHMM_comp::switch_state_training(){
+void AdaptiveHHMM::switch_state_training(){
     state_training = not state_training;
 }
 
-void HiddenHMM_comp::set_initial_means(const vector_d& means){
+void AdaptiveHHMM::set_initial_means(const vector_d& means){
     assert(means.size() == get_nstates());
     matrix_d pam = get_params();
     for (int i = 0; i < get_nstates(); ++i){
@@ -228,7 +228,7 @@ void HiddenHMM_comp::set_initial_means(const vector_d& means){
     set_params(pam);
 }
 
-void HiddenHMM_comp::set_initial_vars(const vector_d& vars){
+void AdaptiveHHMM::set_initial_vars(const vector_d& vars){
     assert(vars.size() == get_nstates());
     matrix_d pam = get_params();
     for (int i = 0; i < get_nstates(); ++i){
@@ -239,7 +239,7 @@ void HiddenHMM_comp::set_initial_vars(const vector_d& vars){
 }
 
 
-double HiddenHMM_comp::gaussian_pdf(double x, double mu, double var){
+double AdaptiveHHMM::gaussian_pdf(double x, double mu, double var){
     double factor = 1 / sqrt(2 * M_PI * var);
     double exponent = exp(-(x - mu)*(x - mu) / (2 * var));
     return factor * exponent;
@@ -247,7 +247,7 @@ double HiddenHMM_comp::gaussian_pdf(double x, double mu, double var){
 
 // Matrix T x N: distribution of T observations on the N classes 
 
-matrix_d HiddenHMM_comp::distribution(const vector_d &signal){
+matrix_d AdaptiveHHMM::distribution(const vector_d &signal){
     matrix_d params = get_params();
     int T = signal.size(),
         N = get_nstates();
@@ -265,7 +265,7 @@ matrix_d HiddenHMM_comp::distribution(const vector_d &signal){
     return distr;
 }
 
-vector_d HiddenHMM_comp::distribution(double observation){
+vector_d AdaptiveHHMM::distribution(double observation){
     matrix_d params = get_params();
     int n = get_nstates();
 
@@ -278,7 +278,7 @@ vector_d HiddenHMM_comp::distribution(double observation){
 }
 
 
-void HiddenHMM_comp::gaussian_params(const vector_d& signal, const vector_int& v_states){
+void AdaptiveHHMM::gaussian_params(const vector_d& signal, const vector_int& v_states){
     int N = get_nstates(),
         T = signal.size();
 
@@ -309,7 +309,7 @@ void HiddenHMM_comp::gaussian_params(const vector_d& signal, const vector_int& v
     set_params(params);
 }
 
-void HiddenHMM_comp::gaussian_params(const vector_d &signal, const matrix_d &gammes){
+void AdaptiveHHMM::gaussian_params(const vector_d &signal, const matrix_d &gammes){
     int N = get_nstates(),
         T = signal.size();
 
@@ -334,7 +334,7 @@ void HiddenHMM_comp::gaussian_params(const vector_d &signal, const matrix_d &gam
     set_params(params);
 }
 
-void HiddenHMM_comp::fit_matrix(const tensor_d &forw, const tensor_d &back, 
+void AdaptiveHHMM::fit_matrix(const tensor_d &forw, const tensor_d &back, 
                         const matrix_d &distrib, const tensor_d& old_hidden_mat,
                         const tensor_d& old_trans_mats, matrix_d & gammas)
 {
@@ -410,7 +410,7 @@ void HiddenHMM_comp::fit_matrix(const tensor_d &forw, const tensor_d &back,
     return;
 }
 
-void HiddenHMM_comp::fit_matrix_states(const matrix_d &forw, const matrix_d &back, 
+void AdaptiveHHMM::fit_matrix_states(const matrix_d &forw, const matrix_d &back, 
                         const vector_int &states, const tensor_d& old_hidden_mat,
                         const tensor_d& old_trans_mats)
 {
@@ -481,7 +481,7 @@ void HiddenHMM_comp::fit_matrix_states(const matrix_d &forw, const matrix_d &bac
 
 
 // Upsi
-void HiddenHMM_comp::fit_matrix(const vector_int &states, int h){
+void AdaptiveHHMM::fit_matrix(const vector_int &states, int h){
     int T = states.size(),
         N = get_nstates();
 
@@ -513,7 +513,7 @@ void HiddenHMM_comp::fit_matrix(const vector_int &states, int h){
 }
 
 
-void HiddenHMM_comp::fit_model_params(const vector_d& signal, const tensor_d& hidden_mat,
+void AdaptiveHHMM::fit_model_params(const vector_d& signal, const tensor_d& hidden_mat,
                         const tensor_d& trans_mats) {
     int T = signal.size(),
         N = get_nstates(),
@@ -537,7 +537,7 @@ void HiddenHMM_comp::fit_model_params(const vector_d& signal, const tensor_d& hi
     }
 }
 
-void HiddenHMM_comp::fit_model_params_states(const vector_d& signal, const vector_int &states, 
+void AdaptiveHHMM::fit_model_params_states(const vector_d& signal, const vector_int &states, 
                                     const tensor_d& hidden_mat, const tensor_d& trans_mats) {
     int T = signal.size(),
         N = get_nstates(),
@@ -556,13 +556,13 @@ void HiddenHMM_comp::fit_model_params_states(const vector_d& signal, const vecto
     fit_matrix_states(forw, back, states, hidden_mat, trans_mats);
 }
 
-void HiddenHMM_comp::fit_model_params_from_truth(const vector_d &signal, const vector_int &v_states){
+void AdaptiveHHMM::fit_model_params_from_truth(const vector_d &signal, const vector_int &v_states){
     gaussian_params(signal, v_states);
 }
 
 // To be tested
 
-matrix_int HiddenHMM_comp::decode_seq(const int& S, const int& H, const tensor_d& hidden_mat,
+matrix_int AdaptiveHHMM::decode_seq(const int& S, const int& H, const tensor_d& hidden_mat,
                     const tensor_d &matrices, const matrix_d &initial_distr, const matrix_d &params,
                     const matrix_d &distr, const bool prints,
                     const int iter_print)
@@ -646,7 +646,7 @@ matrix_int HiddenHMM_comp::decode_seq(const int& S, const int& H, const tensor_d
 }
 
 
-matrix_int HiddenHMM_comp::decode(const vector_d &signal, bool only_seq){
+matrix_int AdaptiveHHMM::decode(const vector_d &signal, bool only_seq){
     matrix_d distr = distribution(signal);
     assert(only_seq);
     
@@ -659,7 +659,7 @@ matrix_int HiddenHMM_comp::decode(const vector_d &signal, bool only_seq){
 
 // To be tested
 
-void HiddenHMM_comp::forward(const vector_d &signal, const matrix_d &distr,
+void AdaptiveHHMM::forward(const vector_d &signal, const matrix_d &distr,
                         const matrix_d& init, const tensor_d& mats, 
                         const tensor_d& hidden_mat, tensor_d& forw)
 {
@@ -716,7 +716,7 @@ void HiddenHMM_comp::forward(const vector_d &signal, const matrix_d &distr,
     }
 }
 
-void HiddenHMM_comp::forward_states(const vector_d &signal, const vector_int &states,
+void AdaptiveHHMM::forward_states(const vector_d &signal, const vector_int &states,
                         const matrix_d& init, const tensor_d& mats, 
                         const tensor_d& hidden_mat, matrix_d& forw)
 {
@@ -764,7 +764,7 @@ void HiddenHMM_comp::forward_states(const vector_d &signal, const vector_int &st
     }
 }
 
-void HiddenHMM_comp::backward(const vector_d &signal, const matrix_d &distr,
+void AdaptiveHHMM::backward(const vector_d &signal, const matrix_d &distr,
                         const matrix_d& init, const tensor_d& mats, 
                         const tensor_d& hidden_mat, tensor_d& back){
     cout << "Backward" << endl;
@@ -802,7 +802,7 @@ void HiddenHMM_comp::backward(const vector_d &signal, const matrix_d &distr,
     }
 }
 
-void HiddenHMM_comp::backward_states(const vector_d &signal, const vector_int &states,
+void AdaptiveHHMM::backward_states(const vector_d &signal, const vector_int &states,
                         const matrix_d& init, const tensor_d& mats, 
                         const tensor_d& hidden_mat, matrix_d& back){
     cout << "Backward States" << endl;
@@ -835,7 +835,7 @@ void HiddenHMM_comp::backward_states(const vector_d &signal, const vector_int &s
     }
 }
 
-void HiddenHMM_comp::EM_maximization(const vector_d &signal, const vector_int &states,
+void AdaptiveHHMM::EM_maximization(const vector_d &signal, const vector_int &states,
                                 double tol, int maxits, int seed, int iter_print){
 
     int N = get_nstates(),

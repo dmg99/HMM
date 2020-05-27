@@ -4,12 +4,12 @@
 #include "HMM.hh"
 #include "../lib/Numpy2vec/nptostdvect.hh"
 #include "HiddenHMM.hh"
-#include "HiddenHMM_comp.hh"
+#include "AdaptiveHHMM.hh"
 %}
 
 %include "HMM.hh"
 %include "HiddenHMM.hh"
-%include "HiddenHMM_comp.hh"
+%include "AdaptiveHHMM.hh"
 %include "../lib/Numpy2vec/nptostdvect.hh"
 %include "std_vector.i"
 %template(tensord) std::vector<std::vector<std::vector<double>>>;
