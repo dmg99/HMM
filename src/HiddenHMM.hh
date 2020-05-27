@@ -9,8 +9,8 @@
 #include <cassert>
 #include <cmath>
 #include <string>
-#include "Matrix/Matrix.hh"
-#include "Numpy2vec/nptostdvect.hh"
+#include "../lib/Matrix/Matrix.hh"
+#include "../lib/Numpy2vec/nptostdvect.hh"
 
 using namespace std;
 using vector_d = vector<double>;

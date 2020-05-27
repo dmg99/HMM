@@ -8,19 +8,19 @@ NPDIRECTORY=/usr/local/lib/python3.6/dist-packages/numpy/core/include/numpy/
 NPDIRECTORY2=/usr/lib/python3.6/site-packages/numpy/core/include/numpy/
 NPDIRECTORY3=/home/joobz/.local/lib/python3.8/site-packages/numpy/core/include/numpy/
 LLIBRERIA = /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/config-3.7m-darwin
-CXXFLAGS= -Wall -O2 -std=c++11 -fPIC -I$(PYDIRECTORY) -I$(PYDIRECTORY2) -I$(PYDIRECTORYTONI) -I$(NPDIRECTORY) -I$(NPDIRECTORY2) -I$(NPDIRECTORY3) -I$(NPDIRECTORYTONI) -I$(ALGUNALTRE)
-DEPS=./Matrix/Matrix.hh ./Numpy2vec/nptostdvect.hh
-OBJ=./Matrix/Matrix.o ./Numpy2vec/nptostdvect.o HMM.o HMM_wrap.o HiddenHMM.o HiddenHMM_comp.o 
+CXXFLAGS= -w -O2 -std=c++11 -fPIC -I$(PYDIRECTORY) -I$(PYDIRECTORY2) -I$(PYDIRECTORYTONI) -I$(NPDIRECTORY) -I$(NPDIRECTORY2) -I$(NPDIRECTORY3) -I$(NPDIRECTORYTONI) -I$(ALGUNALTRE)
+DEPS=./lib/Matrix/Matrix.hh ./lib/Numpy2vec/nptostdvect.hh
+OBJ=./lib/Matrix/Matrix.o ./lib/Numpy2vec/nptostdvect.o ./src/HMM.o ./src/HMM_wrap.o ./src/HiddenHMM.o ./src/HiddenHMM_comp.o 
 
 %.o:%.cc $(DEPS)
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-_HMM.so: $(OBJ) 
+./dist/_HMM.so: $(OBJ) 
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@
 
-HMM_wrap.cc: HMM.i HMM.o
-	swig -c++ -python HMM.i
-	mv HMM_wrap.cxx HMM_wrap.cc
+./src/HMM_wrap.cc: ./src/HMM.i ./src/HMM.o
+	swig -c++ -python ./src/HMM.i
+	mv ./src/HMM_wrap.cxx ./src/HMM_wrap.cc
 
 clean:
-	rm *.o */*.o *.so HMM_wrap.cc
+	rm ./lib/*/*.o ./dist/*.so ./src/HMM_wrap.cc ./src/HMM.py
