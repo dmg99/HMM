@@ -1,6 +1,6 @@
 # Hidden Markov Model
 
-C++ Hidden Markov Model implementation with Python interfacing (using SWIG). Most features are currently in development, but the core parts are functional. Updates are not plan, we will work on it when we have some time. The implementation is mostly based in the formulas and notations in [Wikipedia](https://en.wikipedia.org/wiki/Hidden_Markov_model).
+C++ Hidden Markov Model implementation with Python interfacing (using SWIG) developed by [Joobz](https://github.com/Joobz) and [dmg99](https://github.com/dmg99). Most features are currently in development, but the core parts are functional. Updates are not plan, we will work on it when we have some time. The implementation is mostly based in the formulas and notations in [Wikipedia](https://en.wikipedia.org/wiki/Hidden_Markov_model).
 
 Feel free to coment on bugs or possible improvements. We hope it proves useful.
 
